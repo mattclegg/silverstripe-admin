@@ -5,6 +5,7 @@ dist: xenial
 services:
   - mysql
   - postgresql
+  - sqlite
   - xvfb
 
 cache:
@@ -20,16 +21,17 @@ addons:
 
 env:
   global:
-    - DB=MYSQL
     - COMPOSER_ROOT_VERSION=1.x-dev
     - SS_BASE_URL="http://localhost:8080/"
     - SS_ENVIRONMENT_TYPE="dev"
     - RECIPE_VERSION=4.x-dev
   jobs:
-    - BEHAT_TEST=admin
-    - BEHAT_TEST=cms
-    - PHPCS_TEST=1
-    - PHPUNIT_TEST=1
+    - DB=MYSQL BEHAT_TEST=admin
+    - DB=MYSQL BEHAT_TEST=cms
+    - DB=PGSQL BEHAT_TEST=admin
+    - DB=PGSQL BEHAT_TEST=cms
+    - DB=SQLITE BEHAT_TEST=admin
+    - DB=SQLITE BEHAT_TEST=cms
 
 # Currently Supported Versions of PHP; https://www.php.net/supported-versions.php
 php:
@@ -43,6 +45,8 @@ jobs:
     - env: NPM_TEST=1 RELEASE=1
       language: node_js
       node_js: 10
+    - env: PHPCS_TEST=1
+    - env: PHPUNIT_TEST=1
 
 before_script:
 # Init PHP
