@@ -23,7 +23,7 @@ env:
     - COMPOSER_ROOT_VERSION=1.x-dev
     - SS_BASE_URL="http://localhost:8080/"
     - SS_ENVIRONMENT_TYPE="dev"
-    - RECIPE_VERSION=4.x-dev
+    - RECIPE_VERSION=4.5.x-dev
   jobs:
     - BEHAT_TEST=admin
     - BEHAT_TEST=cms
