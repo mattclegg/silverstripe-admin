@@ -28,13 +28,13 @@ env:
   jobs:
     - BEHAT_TEST=admin
     - BEHAT_TEST=cms
-    - PHPCS_TEST=1
-    - PHPUNIT_TEST=1
+#    - PHPCS_TEST=1
+#    - PHPUNIT_TEST=1
 
 # Currently Supported Versions of PHP; https://www.php.net/supported-versions.php
 php:
-  - 7.2
-  - 7.3
+#  - 7.2
+#  - 7.3
   - 7.4
 
 jobs:
@@ -62,7 +62,7 @@ before_script:
   - if [[ $BEHAT_TEST == cms ]]; then composer require silverstripe/recipe-cms:$RECIPE_VERSION --no-update; fi
 
   - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
-  - composer show --tree
+  - composer show -i | awk '{ print "composer show "$1" -vv;" }'
 
 # Install NPM dependencies
   - if [[ $NPM_TEST ]]; then nvm install && npm install -g yarn && yarn install --network-concurrency 1; fi
