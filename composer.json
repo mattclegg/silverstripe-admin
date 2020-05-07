@@ -20,7 +20,7 @@
     ],
     "require": {
         "silverstripe/framework": "^4.5",
-        "silverstripe/versioned": "^1@dev",
+        "silverstripe/versioned": "^1.5.x-dev",
         "silverstripe/vendor-plugin": "^1.0"
     },
     "require-dev": {
