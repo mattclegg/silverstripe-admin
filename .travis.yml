@@ -23,12 +23,16 @@ env:
     - COMPOSER_ROOT_VERSION=1.x-dev
     - SS_BASE_URL="http://localhost:8080/"
     - SS_ENVIRONMENT_TYPE="dev"
-    - RECIPE_VERSION=4.5.x-dev
   jobs:
-    - BEHAT_TEST=admin
-    - BEHAT_TEST=cms
-#    - PHPCS_TEST=1
-#    - PHPUNIT_TEST=1
+    # 5.x-dev
+    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=admin RECIPE_VERSION=5.x-dev
+    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=cms RECIPE_VERSION=5.x-dev
+    # 4.5.x-dev
+    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=admin RECIPE_VERSION=4.5.x-dev
+    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=cms RECIPE_VERSION=4.5.x-dev
+    # 4.x-dev
+    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=admin RECIPE_VERSION=4.x-dev
+    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=cms RECIPE_VERSION=4.x-dev
 
 # Currently Supported Versions of PHP; https://www.php.net/supported-versions.php
 php:
@@ -54,7 +58,8 @@ before_script:
 
 # Install composer
   - composer validate
-  - composer require silverstripe/recipe-testing:^1 silverstripe/recipe-core:$RECIPE_VERSION silverstripe/versioned:1.x-dev --no-update
+  - composer require --no-update silverstripe/framework silverstripe/versioned silverstripe/vendor-plugin
+  - composer require silverstripe/recipe-testing:^1 silverstripe/recipe-core:$RECIPE_VERSION --no-update
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.x-dev --no-update; fi
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.x-dev --no-update; fi
   - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile; fi
@@ -62,6 +67,7 @@ before_script:
 
   - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
   - composer show -i | awk '{ print "composer show "$1" -vv;" }' | sh
+  - jq --version || true
 
 # Install NPM dependencies
   - if [[ $NPM_TEST ]]; then nvm install && npm install -g yarn && yarn install --network-concurrency 1; fi
