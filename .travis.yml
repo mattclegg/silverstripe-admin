@@ -24,12 +24,10 @@ env:
     - SS_BASE_URL="http://localhost:8080/"
     - SS_ENVIRONMENT_TYPE="dev"
   jobs:
-    # 2.x-dev
-    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=admin RECIPE_VERSION=2.x-dev
-    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=cms RECIPE_VERSION=2.x-dev
-    # 1.x-dev
-    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=admin RECIPE_VERSION=1.x-dev
-    - PHPCS_TEST=1 PHPUNIT_TEST=1 BEHAT_TEST=cms RECIPE_VERSION=1.x-dev
+#    - PHPCS_TEST=1
+#    - PHPUNIT_TEST=1
+    - BEHAT_TEST=admin
+    - BEHAT_TEST=cms
 
 # Currently Supported Versions of PHP; https://www.php.net/supported-versions.php
 php:
@@ -56,7 +54,7 @@ before_script:
 # Install composer
   - composer validate
   - composer require --no-update silverstripe/framework silverstripe/versioned silverstripe/vendor-plugin
-  - composer require silverstripe/recipe-testing:$RECIPE_VERSION --no-update
+  - composer require silverstripe/recipe-testing --no-update
   - if [[ $DB == PGSQL ]]; then composer require silverstripe/postgresql:2.x-dev --no-update; fi
   - if [[ $DB == SQLITE ]]; then composer require silverstripe/sqlite3:2.x-dev --no-update; fi
   - if [[ $PHPCS_TEST ]]; then composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile; fi
@@ -95,7 +93,7 @@ after_failure:
 
 before_deploy:
 # Use installer to fill in any possible dependencies
-  - composer require silverstripe/installer:$RECIPE_VERSION
+  - composer require silverstripe/installer
 # Do the build
   - yarn static-pattern-lib
 
