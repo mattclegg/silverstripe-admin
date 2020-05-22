@@ -70,36 +70,36 @@ class CMSProfileControllerTest extends FunctionalTest
         if(is_array($required_permission_codes)){
             $required_permission_codes = implode("|", $required_permission_codes);
         }
-        $this->$assert('JoeEdited', $member->FirstName, 'FirstName field was changed using '. $required_permission_codes);
+        $this->$assert((string)'JoeEdited', $member->FirstName, 'FirstName field was changed using '. $required_permission_codes);
     }
 
     public function requiredPermissionCodesProvider()
     {
         return [
             # Only CMS_ACCESS users
-            ['assertEquals', 'admin', 'CMS_ACCESS'], #FAIL ##FAIL
+            ['assertEquals', 'admin', 'CMS_ACCESS'], #FAIL ##FAIL ##FAIL
             ['assertEquals', 'user3', 'CMS_ACCESS'],
-            ['assertNotEquals', 'nocms', 'CMS_ACCESS'], ##FAIL
+            ['assertNotEquals', 'nocms', 'CMS_ACCESS'], ##FAIL ###FAIL
 
             # Everybody
-            ['assertEquals', 'admin', true], #FAIL ##FAIL
+            ['assertEquals', 'admin', true], #FAIL ##FAIL  ###FAIL
             ['assertEquals', 'user3', true],
             ['assertEquals', 'nocms', true],
 
             # Only nocms users
             ['assertNotEquals', 'admin', 'CUSTOM'],
-            ['assertNotEquals', 'user3', 'CUSTOM'], ##FAIL
+            ['assertNotEquals', 'user3', 'CUSTOM'], ##FAIL  ###FAIL
             ['assertEquals', 'nocms', 'CUSTOM'],
 
             # Only admin group users
-            ['assertEquals', 'admin', 'admins', true], #FAIL
-            ['assertNotEquals', 'user3', 'admins', true], ##FAIL
-            ['assertNotEquals', 'nocms', 'admins', true],
+            ['assertEquals', 'admin', 'admins', true], #FAIL  ###FAIL
+            ['assertNotEquals', 'user3', 'admins', true], ##FAIL  ###FAIL
+            ['assertNotEquals', 'nocms', 'admins', true],  ###FAIL
 
             # Only cmsusers group users
             ['assertNotEquals', 'admin', 'cmsusers', true],
             ['assertEquals', 'user3', 'cmsusers', true], #FAIL ##FAIL
-            ['assertNotEquals', 'nocms', 'cmsusers', true] ##FAIL
+            ['assertNotEquals', 'nocms', 'cmsusers', true] ##FAIL  ###FAIL
         ];
     }
 
