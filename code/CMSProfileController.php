@@ -67,6 +67,8 @@ class CMSProfileController extends LeftAndMain
             return false;
         }
 
+        return true;
+
         // Check they are trying to edit themselves
         if ($member->ID === Security::getCurrentUser()->ID) {
             // Check they can access via self::$required_permission_codes
