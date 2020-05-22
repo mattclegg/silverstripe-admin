@@ -66,13 +66,13 @@ class CMSProfileControllerTest extends FunctionalTest
     public function requiredPermissionCodesProvider()
     {
         return [
-            ['CMS_ACCESS', 'admin', 'assertEquals'],
+            ['CMS_ACCESS', 'admin', 'assertNotEquals'],
             ['CMS_ACCESS', 'user3', 'assertEquals'],
             ['CMS_ACCESS', 'nocms', 'assertNotEquals'],
 
-            [true, 'admin', 'assertEquals'],
-            [true, 'user3', 'assertEquals'],
-            [true, 'nocms', 'assertEquals'],
+            [TRUE, 'admin', 'assertEquals'],
+            [TRUE, 'user3', 'assertEquals'],
+            [TRUE, 'nocms', 'assertEquals'],
 
             ['CUSTOM', 'admin', 'assertNotEquals'],
             ['CUSTOM', 'user3', 'assertNotEquals'],
@@ -96,8 +96,8 @@ class CMSProfileControllerTest extends FunctionalTest
         $cmsusersPermissionCodes = $this->objFromFixture(Group::class, 'cmsusers')->columnUnique('Code');
 
         return [
-            [$cmsusersPermissionCodes, 'admin', 'assertEquals'],
-            [$cmsusersPermissionCodes, 'user3', 'assertEquals'],
+            [$cmsusersPermissionCodes, 'admin', 'assertNotEquals'],
+            [$cmsusersPermissionCodes, 'user3', 'assertNotEquals'],
             [$cmsusersPermissionCodes, 'nocms', 'assertNotEquals']
         ];
     }
