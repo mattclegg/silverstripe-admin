@@ -77,12 +77,12 @@ class CMSProfileControllerTest extends FunctionalTest
     {
         return [
             # Only CMS_ACCESS users
-            ['assertEquals', 'CMS_ACCESS', 'admin', ],
-            ['assertEquals', 'CMS_ACCESS', 'user3', 'assertEquals'],
-            ['assertNotEquals', 'CMS_ACCESS', 'nocms', 'assertNotEquals'],
+            ['assertEquals', 'admin', 'CMS_ACCESS'],
+            ['assertEquals', 'user3', 'CMS_ACCESS'],
+            ['assertNotEquals', 'nocms', 'CMS_ACCESS'],
 
             # Everybody
-            ['assertEquals', 'admin', true],
+            ['assertEquals', 'admin', true], #FAIL
             ['assertEquals', 'user3', true],
             ['assertEquals', 'nocms', true],
 
@@ -92,14 +92,14 @@ class CMSProfileControllerTest extends FunctionalTest
             ['assertEquals', 'nocms', 'CUSTOM'],
 
             # Only admin group users
-            ['assertEquals', 'admin', 'admins'],
-            ['assertNotEquals', 'user3', 'admins'],
-            ['assertNotEquals', 'nocms', 'admins'],
+            ['assertEquals', 'admin', 'admins', true],
+            ['assertNotEquals', 'user3', 'admins', true],
+            ['assertNotEquals', 'nocms', 'admins', true],
 
             # Only cmsusers group users
-            ['assertNotEquals', 'admin', 'cmsusers'],
-            ['assertEquals', 'user3', 'cmsusers'],
-            ['assertNotEquals', 'nocms', 'cmsusers']
+            ['assertNotEquals', 'admin', 'cmsusers', true],
+            ['assertEquals', 'user3', 'cmsusers', true],
+            ['assertNotEquals', 'nocms', 'cmsusers', true]
         ];
     }
 

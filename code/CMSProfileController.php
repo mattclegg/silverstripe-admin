@@ -72,6 +72,9 @@ class CMSProfileController extends LeftAndMain
             // Check they can access via self::$required_permission_codes
             $codes = $this->getRequiredPermissions();
 
+            var_dump(__LINES__);
+            var_dump($codes);
+
             // allow explicit TRUE || default to Permission::checkMember()
             return $codes === true || Permission::checkMember($member, $codes);
         }
