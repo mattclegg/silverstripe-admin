@@ -59,7 +59,11 @@ class CMSProfileControllerTest extends FunctionalTest
         ));
 
         $member = $this->objFromFixture(Member::class, $identifier);
-        $this->$assert('JoeEdited', $member->FirstName, 'FirstName field was changed using '. implode("|", $required_permission_codes));
+
+        if(is_array($required_permission_codes)){
+            $required_permission_codes = implode("|", $required_permission_codes);
+        }
+        $this->$assert('JoeEdited', $member->FirstName, 'FirstName field was changed using '. $required_permission_codes);
     }
 
     public function requiredPermissionCodesProvider()
