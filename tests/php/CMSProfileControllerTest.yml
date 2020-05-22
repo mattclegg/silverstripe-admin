@@ -8,19 +8,7 @@
   test:
     Code: CMS_ACCESS_TestController
   nocms:
-    Code: CUSTOM1
-
-'SilverStripe\Security\CMSProfileController':
-  default:
-    required_permission_codes: CMS_ACCESS
-  everybody:
-    required_permission_codes: true
-  custom:
-    required_permission_codes: CUSTOM
-  admin:
-    required_permission_codes: '=>SilverStripe\Security\Permission.admin'
-  cms:
-    required_permission_codes: '=>SilverStripe\Security\Permission.cmsmain, =>SilverStripe\Security\Permission.leftandmain'
+    Code: CUSTOM
 
 'SilverStripe\Security\Group':
   admins:

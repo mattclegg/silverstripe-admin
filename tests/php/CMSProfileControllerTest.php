@@ -6,6 +6,7 @@ use SilverStripe\Admin\CMSProfileController;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Group;
 
 class CMSProfileControllerTest extends FunctionalTest
 {
@@ -39,11 +40,9 @@ class CMSProfileControllerTest extends FunctionalTest
     /**
      * @dataProvider requiredPermissionCodesProvider
      */
-    public function testMemberEditsOwnProfile($assert, $fixtureTest, $identifier)
+    public function testMemberEditsOwnProfile($assert, $required_permission_codes, $identifier)
     {
-        CMSProfileController::config()->update('required_permission_codes', [
-            $this->objFromFixture(CMSProfileController::class, $fixtureTest)
-        ]);
+        CMSProfileController::config()->update('required_permission_codes', $required_permission_codes);
 
         $member = $this->objFromFixture(Member::class, $identifier);
         $this->session()->set('loggedInAs', $member->ID);
@@ -66,26 +65,29 @@ class CMSProfileControllerTest extends FunctionalTest
 
     public function requiredPermissionCodesProvider()
     {
+        $adminPermissionCodes = $this->objFromFixture(Group::class, 'admins')->columnUnique('Code');
+        $cmsusersPermissionCodes = $this->objFromFixture(Group::class, 'cmsusers')->columnUnique('Code');
+
         return [
-            ['default', 'admin', 'assertEquals'],
-            ['default', 'user3', 'assertEquals'],
-            ['default', 'nocms', 'assertNotEquals'],
+            ['CMS_ACCESS', 'admin', 'assertEquals'],
+            ['CMS_ACCESS', 'user3', 'assertEquals'],
+            ['CMS_ACCESS', 'nocms', 'assertNotEquals'],
 
-            ['everybody', 'admin', 'assertEquals'],
-            ['everybody', 'user3', 'assertEquals'],
-            ['everybody', 'nocms', 'assertEquals'],
+            [true, 'admin', 'assertEquals'],
+            [true, 'user3', 'assertEquals'],
+            [true, 'nocms', 'assertEquals'],
 
-            ['custom', 'admin', 'assertNotEquals'],
-            ['custom', 'user3', 'assertNotEquals'],
-            ['custom', 'nocms', 'assertEquals'],
+            ['CUSTOM', 'admin', 'assertNotEquals'],
+            ['CUSTOM', 'user3', 'assertNotEquals'],
+            ['CUSTOM', 'nocms', 'assertEquals'],
 
-            ['admin', 'admin', 'assertEquals'],
-            ['admin', 'user3', 'assertNotEquals'],
-            ['admin', 'nocms', 'assertNotEquals'],
+            [$adminPermissionCodes, 'admin', 'assertEquals'],
+            [$adminPermissionCodes, 'user3', 'assertNotEquals'],
+            [$adminPermissionCodes, 'nocms', 'assertNotEquals'],
 
-            ['cms', 'admin', 'assertEquals'],
-            ['cms', 'user3', 'assertEquals'],
-            ['cms', 'nocms', 'assertNotEquals']
+            [$cmsusersPermissionCodes, 'admin', 'assertEquals'],
+            [$cmsusersPermissionCodes, 'user3', 'assertEquals'],
+            [$cmsusersPermissionCodes, 'nocms', 'assertNotEquals']
         ];
     }
 
