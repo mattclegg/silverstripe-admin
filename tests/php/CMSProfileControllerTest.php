@@ -40,7 +40,7 @@ class CMSProfileControllerTest extends FunctionalTest
     /**
      * @dataProvider requiredPermissionCodesProvider
      */
-    public function testMemberEditsOwnProfile($assert, $required_permission_codes, $identifier)
+    public function testMemberEditsOwnProfile($required_permission_codes, $identifier, $assert)
     {
         CMSProfileController::config()->update('required_permission_codes', $required_permission_codes);
 
