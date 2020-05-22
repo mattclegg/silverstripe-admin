@@ -7,6 +7,20 @@
     Code: CMS_ACCESS_CMSMain
   test:
     Code: CMS_ACCESS_TestController
+  nocms:
+    Code: CUSTOM1
+
+'SilverStripe\Security\CMSProfileController':
+  default:
+    required_permission_codes: CMS_ACCESS
+  everybody:
+    required_permission_codes: true
+  custom:
+    required_permission_codes: CUSTOM
+  admin:
+    required_permission_codes: '=>SilverStripe\Security\Permission.admin'
+  cms:
+    required_permission_codes: '=>SilverStripe\Security\Permission.cmsmain, =>SilverStripe\Security\Permission.leftandmain'
 
 'SilverStripe\Security\Group':
   admins:
@@ -18,6 +32,9 @@
   test:
     Title: Test group
     Permissions: '=>SilverStripe\Security\Permission.test'
+  nocms:
+    Title: No CMS access group
+    Permissions: '=>SilverStripe\Security\Permission.nocms'
 
 'SilverStripe\Security\Member':
   admin:
@@ -36,3 +53,7 @@
     FirstName: Files
     Email: user3@example.com
     Groups: '=>SilverStripe\Security\Group.test'
+  nocms:
+    FirstName: Matt
+    Email: matt@example.com
+    Groups: '=>SilverStripe\Security\Group.nocms'

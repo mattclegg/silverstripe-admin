@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Admin\Tests;
 
+use SilverStripe\Admin\CMSProfileController;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
@@ -35,9 +36,16 @@ class CMSProfileControllerTest extends FunctionalTest
         $this->assertNotEquals($anotherMember->FirstName, 'JoeEdited', 'FirstName field stays the same');
     }
 
-    public function testMemberEditsOwnProfile()
+    /**
+     * @dataProvider requiredPermissionCodesProvider
+     */
+    public function testMemberEditsOwnProfile($assert, $fixtureTest, $identifier)
     {
-        $member = $this->objFromFixture(Member::class, 'user3');
+        CMSProfileController::config()->update('required_permission_codes', [
+            $this->objFromFixture(CMSProfileController::class, $fixtureTest)
+        ]);
+
+        $member = $this->objFromFixture(Member::class, $identifier);
         $this->session()->set('loggedInAs', $member->ID);
 
         $response = $this->post('admin/myprofile/EditForm', array(
@@ -51,9 +59,34 @@ class CMSProfileControllerTest extends FunctionalTest
             'Password[_ConfirmPassword]' => 'password',
         ));
 
-        $member = $this->objFromFixture(Member::class, 'user3');
+        $member = $this->objFromFixture(Member::class, $identifier);
 
-        $this->assertEquals('JoeEdited', $member->FirstName, 'FirstName field was changed');
+        $this->$assert('JoeEdited', $member->FirstName, 'FirstName field was changed');
+    }
+
+    public function requiredPermissionCodesProvider()
+    {
+        return [
+            ['default', 'admin', 'assertEquals'],
+            ['default', 'user3', 'assertEquals'],
+            ['default', 'nocms', 'assertNotEquals'],
+
+            ['everybody', 'admin', 'assertEquals'],
+            ['everybody', 'user3', 'assertEquals'],
+            ['everybody', 'nocms', 'assertEquals'],
+
+            ['custom', 'admin', 'assertNotEquals'],
+            ['custom', 'user3', 'assertNotEquals'],
+            ['custom', 'nocms', 'assertEquals'],
+
+            ['admin', 'admin', 'assertEquals'],
+            ['admin', 'user3', 'assertNotEquals'],
+            ['admin', 'nocms', 'assertNotEquals'],
+
+            ['cms', 'admin', 'assertEquals'],
+            ['cms', 'user3', 'assertEquals'],
+            ['cms', 'nocms', 'assertNotEquals']
+        ];
     }
 
     public function testExtendedPermissionsStopEditingOwnProfile()
