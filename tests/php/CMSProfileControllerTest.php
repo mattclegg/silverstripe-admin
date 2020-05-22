@@ -59,25 +59,36 @@ class CMSProfileControllerTest extends FunctionalTest
         ));
 
         $member = $this->objFromFixture(Member::class, $identifier);
-
-        $this->$assert('JoeEdited', $member->FirstName, 'FirstName field was changed');
+        $this->$assert('JoeEdited', $member->FirstName, 'FirstName field was changed using '. implode("|", $required_permission_codes));
     }
 
     public function requiredPermissionCodesProvider()
     {
         return [
-            ['CMS_ACCESS', 'admin', 'assertNotEquals'],
+            ['CMS_ACCESS', 'admin', 'assertEquals'],
             ['CMS_ACCESS', 'user3', 'assertEquals'],
             ['CMS_ACCESS', 'nocms', 'assertNotEquals'],
 
-            [TRUE, 'admin', 'assertEquals'],
-            [TRUE, 'user3', 'assertEquals'],
-            [TRUE, 'nocms', 'assertEquals'],
+            [true, 'admin', 'assertEquals'],
+            [true, 'user3', 'assertEquals'],
+            [true, 'nocms', 'assertEquals'],
+
+            [1, 'admin', 'assertEquals'],
+            [1, 'user3', 'assertEquals'],
+            [1, 'nocms', 'assertEquals'],
 
             ['CUSTOM', 'admin', 'assertNotEquals'],
             ['CUSTOM', 'user3', 'assertNotEquals'],
             ['CUSTOM', 'nocms', 'assertEquals']
         ];
+    }
+
+    /**
+     * @dataProvider requiredPermissionCodesProvider_admin
+     */
+    public function testMemberEditsOwnProfile_admin($required_permission_codes, $identifier, $assert)
+    {
+        $this->testExtendedPermissionsStopEditingOwnProfile($required_permission_codes, $identifier, $assert);
     }
 
     public function requiredPermissionCodesProvider_admin()
@@ -89,6 +100,14 @@ class CMSProfileControllerTest extends FunctionalTest
             [$adminPermissionCodes, 'user3', 'assertNotEquals'],
             [$adminPermissionCodes, 'nocms', 'assertNotEquals']
         ];
+    }
+
+    /**
+     * @dataProvider requiredPermissionCodesProvider_cmsusers
+     */
+    public function testMemberEditsOwnProfile_cmsusers($required_permission_codes, $identifier, $assert)
+    {
+        $this->testExtendedPermissionsStopEditingOwnProfile($required_permission_codes, $identifier, $assert);
     }
 
     public function requiredPermissionCodesProvider_cmsusers()
