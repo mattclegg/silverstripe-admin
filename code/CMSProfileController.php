@@ -92,10 +92,10 @@ class CMSProfileController extends LeftAndMain
         }
         $origLocale = $member->Locale;
 
-        if (!$member->canEdit()) {
-            $form->sessionMessage(_t(__CLASS__.'.CANTEDIT', 'You don\'t have permission to do that'), 'bad');
-            return $this->redirectBack();
-        }
+//        if (!$member->canEdit()) {
+//            $form->sessionMessage(_t(__CLASS__.'.CANTEDIT', 'You don\'t have permission to do that'), 'bad');
+//            return $this->redirectBack();
+//        }
 
         $response = parent::save($data, $form);
 
