@@ -70,7 +70,7 @@ class CMSProfileControllerTest extends FunctionalTest
         if(is_array($required_permission_codes)){
             $required_permission_codes = implode("|", $required_permission_codes);
         }
-        $this->$assert((string)'JoeEdited', $member->FirstName, 'FirstName field was changed using '. $required_permission_codes);
+        $this->$assert('JoeEdited', (string) $member->FirstName, 'FirstName field was changed using '. $required_permission_codes);
     }
 
     public function requiredPermissionCodesProvider()
